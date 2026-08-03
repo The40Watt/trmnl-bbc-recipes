@@ -76,8 +76,7 @@ def fetch_recipe(url):
                     "instructions": [
                         step["text"].strip()
                         for step in data.get("recipeInstructions", [])
-                    ],
-                    "nutrition": data.get("nutrition", {})
+                    ]
                 }
 
                 return recipe
