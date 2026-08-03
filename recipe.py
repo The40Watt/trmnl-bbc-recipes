@@ -72,12 +72,14 @@ def fetch_recipe(url):
                     "cook_time": format_duration(data.get("cookTime")),
                     "total_time": format_duration(data.get("totalTime")),
                     "serves": str(data.get("recipeYield", "")),
-                    "ingredients": data.get("recipeIngredient", [])[:6],
+                    "ingredients": data.get("recipeIngredient", []),
                     "instructions": [
                         step["text"].strip()
                         for step in data.get("recipeInstructions", [])
                     ]
                 }
+
+                recipe["display_ingredients"] = recipe["ingredients"][:6]
 
                 return recipe
 
@@ -86,13 +88,32 @@ def fetch_recipe(url):
 
     return None
 
+def create_trmnl_payload(recipe):
+
+    payload = {
+        "title": recipe["title"],
+        "description": recipe["description"],
+        "url": recipe["url"],
+        "image": recipe["image"],
+        "prep_time": recipe["prep_time"],
+        "cook_time": recipe["cook_time"],
+        "total_time": recipe["total_time"],
+        "serves": recipe["serves"],
+        "ingredients": recipe["display_ingredients"]
+    }
+
+    return payload
 
 def main():
 
     recipe = fetch_recipe(URL)
 
     if recipe:
-        print(json.dumps(recipe, indent=2))
+
+        payload = create_trmnl_payload(recipe)
+
+        print(json.dumps(payload, indent=2))
+
     else:
         print("Recipe not found.")
 
