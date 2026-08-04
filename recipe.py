@@ -115,6 +115,11 @@ def main():
 
         print(json.dumps(payload, indent=2))
 
+        response = requests.post(
+            TRMNL_WEBHOOK_URL,
+            json=payload
+        )
+
 
     else:
         print("Recipe not found.")
