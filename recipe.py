@@ -95,6 +95,7 @@ def create_trmnl_payload(recipe):
         "description": recipe["description"],
         "url": recipe["url"],
         "image": recipe["image"],
+        "qr_code": f"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={recipe['url']}"
         "prep_time": recipe["prep_time"],
         "cook_time": recipe["cook_time"],
         "total_time": recipe["total_time"],
@@ -113,6 +114,7 @@ def main():
         payload = create_trmnl_payload(recipe)
 
         print(json.dumps(payload, indent=2))
+
 
     else:
         print("Recipe not found.")
