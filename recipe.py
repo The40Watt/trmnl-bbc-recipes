@@ -9,8 +9,8 @@ import os
 
 TRMNL_WEBHOOK_URL = os.environ["TRMNL_WEBHOOK_URL"]
 
-#URL = "https://www.bbcgoodfood.com/recipes/chicken-chorizo-jambalaya"
 URL = "https://www.bbcgoodfood.com/recipes/creamy-chicken-pasta"
+
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0"
