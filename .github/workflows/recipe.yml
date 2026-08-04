@@ -21,5 +21,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run recipe script
+        env:
+          TRMNL_WEBHOOK_URL: ${{ secrets.TRMNL_WEBHOOK_URL }}
         run: |
           python recipe.py
