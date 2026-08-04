@@ -5,6 +5,10 @@ from html import unescape
 import requests
 from bs4 import BeautifulSoup
 
+import os
+
+TRMNL_WEBHOOK_URL = os.environ["TRMNL_WEBHOOK_URL"]
+
 URL = "https://www.bbcgoodfood.com/recipes/chicken-chorizo-jambalaya"
 
 HEADERS = {
