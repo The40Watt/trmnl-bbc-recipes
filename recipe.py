@@ -125,8 +125,8 @@ def main():
             json=payload
         )
 
-    print(response.status_code)
-    print(response.text)
+        print(response.status_code)
+        print(response.text)
 
     else:
         print("Recipe not found.")
