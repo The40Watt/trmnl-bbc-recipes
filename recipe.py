@@ -96,16 +96,16 @@ def fetch_recipe(url):
 def create_trmnl_payload(recipe):
 
     payload = {
-        "title": recipe["title"],
-        "description": recipe["description"],
-        "url": recipe["url"],
-        "image": recipe["image"],
-        "qr_code": f"https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={recipe['url']}",
-        "prep_time": recipe["prep_time"],
-        "cook_time": recipe["cook_time"],
-        "total_time": recipe["total_time"],
-        "serves": recipe["serves"],
-        "ingredients": recipe["display_ingredients"]
+        "merge_variables": {
+            "title": recipe["title"],
+            "description": recipe["description"],
+            "url": recipe["url"],
+            "image": recipe["image"],
+            "qr_code": f"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={recipe['url']}",
+            "total_time": recipe["total_time"],
+            "serves": recipe["serves"],
+            "ingredients": recipe["display_ingredients"]
+        }
     }
 
     return payload
