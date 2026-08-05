@@ -3,6 +3,9 @@ name: Daily Recipe
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "0 7 * * *"
+
 jobs:
   recipe:
     runs-on: ubuntu-latest
