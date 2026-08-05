@@ -59,7 +59,7 @@ def get_random_recipe_url():
     # Main sitemap
     sitemap_index = "https://www.bbcgoodfood.com/sitemap.xml"
 
-    response = requests.get(sitemap_index, headers=HEADERS)
+    response = requests.get(sitemap_index, headers=HEADERS, timeout=15)
     response.raise_for_status()
 
     root = ET.fromstring(response.content)
@@ -78,7 +78,7 @@ def get_random_recipe_url():
 
     chosen_sitemap = random.choice(recipe_sitemaps)
 
-    response = requests.get(chosen_sitemap, headers=HEADERS)
+    response = requests.get(chosen_sitemap, headers=HEADERS, timeout=15)
     response.raise_for_status()
 
     root = ET.fromstring(response.content)
@@ -153,30 +153,38 @@ def create_trmnl_payload(recipe):
 
 def main():
 
-    #recipe = fetch_recipe(URL)
+    MAX_ATTEMPTS = 10
 
-    recipe_url = get_random_recipe_url()
+    for attempt in range(MAX_ATTEMPTS):
 
-    print(f"Selected recipe: {recipe_url}")
-    
-    recipe = fetch_recipe(recipe_url)
+        recipe_url = get_random_recipe_url()
 
-    if recipe:
+        print(f"Attempt {attempt + 1}: {recipe_url}")
 
-        payload = create_trmnl_payload(recipe)
+        recipe = fetch_recipe(recipe_url)
 
-        print(json.dumps(payload, indent=2))
+        if recipe:
 
-        response = requests.post(
-            TRMNL_WEBHOOK_URL,
-            json=payload
-        )
+            payload = create_trmnl_payload(recipe)
 
-        print(response.status_code)
-        print(response.text)
+            print(json.dumps(payload, indent=2))
 
-    else:
-        print("Recipe not found.")
+            response = requests.post(
+                TRMNL_WEBHOOK_URL,
+                json=payload,
+                timeout=15
+            )
+
+            print(response.status_code)
+            print(response.text)
+
+            return
+
+        print("Failed to parse recipe, trying another...")
+
+    raise RuntimeError(
+        f"Unable to find a valid recipe after {MAX_ATTEMPTS} attempts."
+    )
 
 
 if __name__ == "__main__":
