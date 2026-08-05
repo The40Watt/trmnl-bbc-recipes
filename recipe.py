@@ -5,6 +5,9 @@ from html import unescape
 import requests
 from bs4 import BeautifulSoup
 
+import random
+import xml.etree.ElementTree as ET
+
 import os
 
 TRMNL_WEBHOOK_URL = os.environ["TRMNL_WEBHOOK_URL"]
@@ -50,6 +53,44 @@ def format_duration(duration):
         return f"{hours} hr{'s' if hours > 1 else ''}"
 
     return f"{minutes} mins"
+
+def get_random_recipe_url():
+
+    # Main sitemap
+    sitemap_index = "https://www.bbcgoodfood.com/sitemap.xml"
+
+    response = requests.get(sitemap_index, headers=HEADERS)
+    response.raise_for_status()
+
+    root = ET.fromstring(response.content)
+
+    namespace = {
+        "sm": "http://www.sitemaps.org/schemas/sitemap/0.9"
+    }
+
+    recipe_sitemaps = []
+
+    for sitemap in root.findall("sm:sitemap", namespace):
+        loc = sitemap.find("sm:loc", namespace).text
+
+        if "recipe" in loc.lower():
+            recipe_sitemaps.append(loc)
+
+    chosen_sitemap = random.choice(recipe_sitemaps)
+
+    response = requests.get(chosen_sitemap, headers=HEADERS)
+    response.raise_for_status()
+
+    root = ET.fromstring(response.content)
+
+    recipe_urls = []
+
+    for url in root.findall("sm:url", namespace):
+        loc = url.find("sm:loc", namespace).text
+        recipe_urls.append(loc)
+
+    return random.choice(recipe_urls)
+
 
 
 def fetch_recipe(url):
@@ -112,7 +153,13 @@ def create_trmnl_payload(recipe):
 
 def main():
 
-    recipe = fetch_recipe(URL)
+    #recipe = fetch_recipe(URL)
+
+    recipe_url = get_random_recipe_url()
+
+    print(f"Selected recipe: {recipe_url}")
+    
+    recipe = fetch_recipe(recipe_url)
 
     if recipe:
 
